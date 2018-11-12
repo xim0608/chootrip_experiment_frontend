@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table table-sm">
+  <thead>
+  <tr>
+    <th scope="col">スポット名</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for spot in spots %}
+    <tr>
+      <td>
+        <a href="">{{ spot['title'] }}</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

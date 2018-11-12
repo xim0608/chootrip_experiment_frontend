@@ -16,6 +16,10 @@ class ChootripApi:
         return cls.request_api("cities/?prefecture={}".format(int(prefecture_id)))
 
     @classmethod
+    def get_city_spots(cls, city_id):
+        return cls.request_api("spots/?city={}".format(int(city_id)))
+
+    @classmethod
     def request_api(cls, path):
         try:
             headers = {"content-type": "application/json"}

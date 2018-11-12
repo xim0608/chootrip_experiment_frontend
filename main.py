@@ -42,5 +42,12 @@ def select_city(prefecture_id=None):
     return render_template('select_city.html', cities=chunked_cities)
 
 
+@app.route('/cities/<city_id>')
+def list_city(city_id=None):
+    spots = ChootripApi.get_city_spots(city_id=int(city_id))['results']
+    import pdb;pdb.set_trace()
+    return render_template('list_city.html', spots=spots)
+
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)

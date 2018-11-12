@@ -16,7 +16,7 @@
     {% for three_cities in cities %}
     <tr>
       {% for city in three_cities %}
-        <td><a href="">{{ city['name'] }}</a></td>
+        <td><a href="{{ url_for('list_city', city_id=city['id']) }}">{{ city['name'] }}</a></td>
       {% endfor %}
     </tr>
     {% endfor %}
