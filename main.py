@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import os
 from chootrip_api import ChootripApi
+# from google.cloud import datastore
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
