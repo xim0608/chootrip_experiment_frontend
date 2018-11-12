@@ -45,7 +45,6 @@ def select_city(prefecture_id=None):
 @app.route('/cities/<city_id>')
 def list_city(city_id=None):
     spots = ChootripApi.get_city_spots(city_id=int(city_id))['results']
-    import pdb;pdb.set_trace()
     return render_template('list_city.html', spots=spots)
 
 
