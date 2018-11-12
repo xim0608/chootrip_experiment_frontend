@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <form action="./session" method="post" class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">
+      観光スポットレコメンデーション<br><small>実験システム</small></h1>
+    <h2 class="h4">学籍番号</h2>
+    <label for="username" class="sr-only">学籍番号</label>
+    <input type="text" name="username" id="username" required class="form-control" placeholder="1xxxxxxx" autofocus>
+    <button type="submit" class="btn btn-lg btn-primary btn-block">次へ</button>
+    <p class="mt-5 mb-3 text-muted">© 2018 Ryuki Wada</p>
+  </form>
+</div>
+
+{% endblock %}
