@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  スポット名から探す：
+
+  地域から探す：
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+      都道府県
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+      {% for pref in prefectures %}
+        <a class="dropdown-item" href="{{ url_for('select_city', prefecture_id=pref.id) }}">{{ pref.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

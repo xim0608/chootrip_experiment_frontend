@@ -12,8 +12,8 @@ class ChootripApi:
         return cls.request_api('prefectures/')
 
     @classmethod
-    def get_cities(cls):
-        return cls.request_api('cities/')
+    def get_cities(cls, prefecture_id):
+        return cls.request_api("cities/?prefecture={}".format(int(prefecture_id)))
 
     @classmethod
     def request_api(cls, path):

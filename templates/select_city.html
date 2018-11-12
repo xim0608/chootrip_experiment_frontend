@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <h1>市区町村一覧</h1>
+  <table class="table table-sm">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">市区町村</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for three_cities in cities %}
+    <tr>
+      {% for city in three_cities %}
+        <td><a href="">{{ city['name'] }}</a></td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

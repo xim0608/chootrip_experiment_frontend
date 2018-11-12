@@ -31,7 +31,14 @@ def top():
     if 'username' not in session:
         return redirect(url_for('login'))
     prefectures = ChootripApi.get_prefectures()
-    return "hello! username: {}".format(session['username'])
+    return render_template('top.html', prefectures=prefectures)
+
+
+@app.route('/prefectures/<prefecture_id>')
+def select_city(prefecture_id=None):
+    cities = ChootripApi.get_cities(prefecture_id)
+    chunked_cities = [cities[n:n + 3] for n in range(0, len(cities), 3)]
+    return render_template('select_city.html', cities=chunked_cities)
 
 
 if __name__ == '__main__':
