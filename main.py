@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import os
+from chootrip_api import ChootripApi
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
@@ -29,6 +30,7 @@ def delete_session():
 def top():
     if 'username' not in session:
         return redirect(url_for('login'))
+    prefectures = ChootripApi.get_prefectures()
     return "hello! username: {}".format(session['username'])
 
 
