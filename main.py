@@ -47,11 +47,16 @@ def select_city(prefecture_id=None):
 @app.route('/cities/<city_id>')
 def list_city(city_id=None):
     spots = ChootripApi.get_city_spots(city_id=int(city_id))['results']
+    for spot in spots:
+        if spot['id'] in session['cart']:
+            spot['added'] = True
     return render_template('list_city.html', spots=spots)
 
 
 @app.route('/api/cart/add/<spot_id>')
 def add_cart(spot_id=None):
+    session.modified = True
+
     if spot_id is None:
         return jsonify(status='error')
     if 'username' not in session:
