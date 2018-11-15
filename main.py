@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 import os
 from chootrip_api import ChootripApi
 # from google.cloud import datastore
@@ -24,6 +24,7 @@ def new_session():
 @app.route('/logout')
 def delete_session():
     session.pop('username', None)
+    session.pop('cart', None)
     return redirect(url_for('login'))
 
 
@@ -47,6 +48,44 @@ def select_city(prefecture_id=None):
 def list_city(city_id=None):
     spots = ChootripApi.get_city_spots(city_id=int(city_id))['results']
     return render_template('list_city.html', spots=spots)
+
+
+@app.route('/api/cart/add/<spot_id>')
+def add_cart(spot_id=None):
+    if spot_id is None:
+        return jsonify(status='error')
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if 'cart' not in session:
+        session['cart'] = []
+    spot_id = int(spot_id)
+    if spot_id in session['cart']:
+        session['cart'].remove(spot_id)
+        return jsonify(status='removed')
+    else:
+        session['cart'].append(spot_id)
+        return jsonify(status='added')
+
+
+@app.route('/api/cart/count')
+def cart_count():
+    if 'username' not in session:
+        return jsonify(login=False)
+    if 'cart' not in session:
+        session['cart'] = []
+    return jsonify(count=len(session['cart']))
+
+
+@app.route('/api/cart/')
+def list_cart_api():
+    # return only spot id
+    return jsonify(spots=session['cart'])
+
+
+@app.route('/cart')
+def list_cart():
+    spots = map(lambda spot_id: ChootripApi.get_spot(spot_id), session['cart'])
+    return render_template('list_cart.html', spots=spots)
 
 
 if __name__ == '__main__':
