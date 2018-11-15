@@ -38,6 +38,7 @@ def top():
 @app.route('/prefectures/<prefecture_id>')
 def select_city(prefecture_id=None):
     cities = ChootripApi.get_cities(prefecture_id)
+    cities = list(filter(lambda city: city['spot_count'] != 0, cities))
     chunked_cities = [cities[n:n + 3] for n in range(0, len(cities), 3)]
     return render_template('select_city.html', cities=chunked_cities)
 

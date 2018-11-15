@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table class="table table-sm">
-  <thead>
-  <tr>
-    <th scope="col">スポット名</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for spot in spots %}
+
+<div class="container">
+  <table class="table table-sm">
+    <thead>
     <tr>
-      <td>
-        <a href="">{{ spot['title'] }}</a>
-      </td>
+      <th scope="col">スポット名</th>
     </tr>
-  {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    {% if spots %}
+      {% for spot in spots %}
+      <tr>
+        <td>
+          <a href="{{ spot['url'] }}">{{ spot['title'] }}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td>スポットがありません．．．</td>
+      </tr>
+    {% endif %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}
