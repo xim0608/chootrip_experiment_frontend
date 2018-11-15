@@ -19,7 +19,19 @@
           $el.removeClass('btn-primary');
           alert('削除しました');
         }
+        check_count()
       })
   });
+
+  function check_count() {
+    $.ajax({
+      type: "GET",
+      url: '/api/cart/count',
+      dataType: "json",
+    })
+      .done(function (data) {
+        $('#cart-count').text(data['count']);
+      })
+  };
 
 })(jQuery);

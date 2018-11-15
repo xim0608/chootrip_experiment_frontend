@@ -9,8 +9,8 @@
 </head>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Spot Recommendation</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+  <a class="navbar-brand" href="/">Spot Recommendation</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -22,25 +22,28 @@
         <a class="nav-link" href="/">トップ</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
           地域から探す
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           {% for pref in prefectures %}
-            <a class="dropdown-item" href="{{ url_for('select_city', prefecture_id=pref.id) }}">{{ pref.name }}</a>
+          <a class="dropdown-item" href="{{ url_for('select_city', prefecture_id=pref.id) }}">{{ pref.name }}</a>
           {% endfor %}
         </div>
       </li>
       <li class="nav-item dropdown">
         <form class="form-inline">
           <input class="form-control mr-sm-2" type="search" placeholder="スポット名から探す" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
         </form>
       </li>
     </ul>
-    <div class="form-inline my-2 my-lg-0">
-      <a class="nav-item">選択中のスポット</a>
-    </div>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('list_cart') }}">選択中のスポット(<b id="cart-count">{{ count }}</b>件)</a>
+      </li>
+    </ul>
   </div>
 </nav>
 
