@@ -3,20 +3,21 @@
 {% block content %}
 
 <div class="container">
-  スポット名から探す：
+  <h1>実験説明</h1>
 
-  地域から探す：
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-      都道府県
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-      {% for pref in prefectures %}
-        <a class="dropdown-item" href="{{ url_for('select_city', prefecture_id=pref.id) }}">{{ pref.name }}</a>
-      {% endfor %}
-    </div>
-  </div>
+  <p>この実験はなんたらかんたら</p>
+
+  <h2>手順説明</h2>
+  <ol>
+    <li>リンクのアンケートに回答する(Googleフォーム回答後もこのシステムを使ってもらうので，この画面は閉じないでください．)</li>
+    <a href="/googleform">ぐーぐるふぉーむ</a>
+    <li>アンケートの回答が終わったらこのシステムに戻ってくる</li>
+    <li>あなたが過去に行ってよかったと感じる観光スポットを10個選択してください</li>
+    <li>選択が終了したら，右上の選択中のスポットのリンクを押して，自分が選択したスポットの確認をしてください．</li>
+    <li>10件選択されていると，下に選択終了ボタンが現れるので，確認ができたらクリックしてください．</li>
+    <li>クリックすると，選択したスポットに応じたレコメンドが表示されます．</li>
+    <li>もう1度，Googleフォームのリンクが現れるので，クリックし表示されたレコメンドを参照しながらアンケートに答えてください．</li>
+  </ol>
 
 </div>
 
