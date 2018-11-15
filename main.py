@@ -5,6 +5,12 @@ from chootrip_api import ChootripApi
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
+prefectures = ChootripApi.get_prefectures()
+
+
+@app.context_processor
+def inject_pref():
+    return dict(prefectures=prefectures)
 
 
 @app.route('/login')
@@ -32,7 +38,6 @@ def delete_session():
 def top():
     if 'username' not in session:
         return redirect(url_for('login'))
-    prefectures = ChootripApi.get_prefectures()
     return render_template('top.html', prefectures=prefectures)
 
 
