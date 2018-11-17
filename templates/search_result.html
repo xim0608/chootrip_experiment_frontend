@@ -5,36 +5,30 @@
 <div class="container">
   <h1>検索結果：「{{ search_word }}」 スポット一覧</h1>
 
-  <table class="table table-sm">
-    <thead>
-    <tr>
-      <th scope="col">スポット名</th>
-      <th>お気に入り</th>
-    </tr>
-    </thead>
-    <tbody>
+  <div>
     {% if spots %}
       {% for spot in spots %}
-      <tr>
-        <td>
-          <a href="{{ spot['url'] }}" target="_blank">{{ spot['title'] }}</a>
-        </td>
-        <td>
-          {% if spot['added'] %}
-            <button type="button" class="btn btn-primary toggle-cart" data-id="{{ spot['id'] }}">追加済み</button>
-          {% else %}
-            <button type="button" class="btn btn-outline-primary toggle-cart" data-id="{{ spot['id'] }}">追加する</button>
-          {% endif %}
-        </td>
-      </tr>
+        <div class="card flex-row flex-wrap spot-card">
+          <div class="card-header border-0">
+            <img src="{{ spot['image_url'] }}" alt="">
+          </div>
+          <div class="card-block px-2">
+            <h4 class="card-title">{{ spot.title }}</h4>
+            <p class="card-text">Description</p>
+            {% if spot['added'] %}
+              <button type="button" class="btn btn-primary toggle-cart" data-id="{{ spot['id'] }}">追加済み</button>
+            {% else %}
+              <button type="button" class="btn btn-outline-primary toggle-cart" data-id="{{ spot['id'] }}">追加する</button>
+            {% endif %}
+            <a href="{{ spot['url'] }}" target="_blank" class="btn btn-outline-success">TripAdvisorでスポット情報を確認する</a>
+          </div>
+          <div class="w-100"></div>
+        </div>
       {% endfor %}
     {% else %}
-      <tr>
-        <td>検索キーワードを変えてもう一度検索してください．</td>
-      </tr>
+      <p>検索キーワードを変えてもう一度検索してください．</p>
     {% endif %}
-    </tbody>
-  </table>
+  </div>
 </div>
 
 {% endblock %}

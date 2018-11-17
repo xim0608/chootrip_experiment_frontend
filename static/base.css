@@ -1,0 +1,9 @@
+.spot-card{
+    padding: 10px;
+    margin: 10px;
+}
+
+.spot-card img{
+   max-width: 200px;
+   height: auto;
+}
