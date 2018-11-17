@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-  <h1>{{ segment_name }}スポット一覧</h1>
+  <h1>検索結果：「{{ search_word }}」 スポット一覧</h1>
 
   <table class="table table-sm">
     <thead>
@@ -30,7 +30,7 @@
       {% endfor %}
     {% else %}
       <tr>
-        <td>スポットがありません．．．</td>
+        <td>検索キーワードを変えてもう一度検索してください．</td>
       </tr>
     {% endif %}
     </tbody>

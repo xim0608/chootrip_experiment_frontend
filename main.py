@@ -12,6 +12,7 @@ prefectures = ChootripApi.get_prefectures()
 def inject_pref():
     return dict(prefectures=prefectures)
 
+
 @app.context_processor
 def inject_cart_count():
     if 'cart' in session:
@@ -64,7 +65,21 @@ def list_city(city_id=None):
         if spot['id'] in session['cart']:
             spot['added'] = True
 
-    return render_template('list_spots.html', city=city, spots=spots)
+    return render_template('list_spots.html', segment_name=city['name'], spots=spots)
+
+
+@app.route('/spots/search')
+def search_result():
+    q = request.args.get('q')
+    q = q.strip()
+    if q:
+        spots = ChootripApi.get_spots_by_title_search(q)
+    else:
+        spots = []
+    for spot in spots:
+        if spot['id'] in session['cart']:
+            spot['added'] = True
+    return render_template('search_result.html', search_word=q, spots=spots)
 
 
 @app.route('/api/cart/add/<spot_id>')
