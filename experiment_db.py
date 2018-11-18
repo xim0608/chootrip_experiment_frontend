@@ -17,37 +17,66 @@ class SpreadSheet():
     def check_exists(cls, wks, student_id):
         user_list = wks.col_values(1)
         if student_id in user_list:
-            return user_list.index(student_id)
+            return user_list.index(student_id) + 1
         else:
             return len(user_list) + 1
 
     @classmethod
-    def update_topic_survey(cls, student_id, user_answer):
+    def update_topic_survey(cls, username, user_answer):
         wks = spreadsheet.worksheet('topic_survey')
-        # num = cls.check_exists(wks, student_id)
-        # cell_list = wks.row_list(num)
-        #
-        # for cell in cell_list:
-        #     cell.value =
 
     @classmethod
-    def update_topic_result(cls, student_id, user_vector):
+    def update_topic_result(cls, username, user_vector):
         wks = spreadsheet.worksheet('topic_result')
-        num = cls.check_exists(wks, student_id)
+        num = cls.check_exists(wks, username)
         cell_list = wks.range("A{}:AY{}".format(num, num))
 
-        values = [student_id]
+        values = [username]
         values.extend(user_vector)
 
         for cell, v in zip(cell_list, values):
             cell.value = v
         wks.update_cells(cell_list)
 
+    @classmethod
+    def update_normalized_topic_result(cls, username, user_vector):
+        wks = spreadsheet.worksheet('normalized_topic_result')
+        num = cls.check_exists(wks, username)
+        cell_list = wks.range("A{}:AY{}".format(num, num))
+
+        values = [username]
+        values.extend(user_vector)
+
+        for cell, v in zip(cell_list, values):
+            cell.value = v
+        wks.update_cells(cell_list)
 
     @classmethod
-    def update_recommend_result(cls, student_id, recommend_spots):
+    def update_recommend_result(cls, username, recommend_spots):
         wks = spreadsheet.worksheet('recommend_result')
+        num = cls.check_exists(wks, username)
+        cell_list = wks.range("A{}:K{}".format(num, num))
+
+        values = [username]
+        values.extend(recommend_spots)
+
+        for cell, v in zip(cell_list, values):
+            cell.value = v
+        wks.update_cells(cell_list)
 
     @classmethod
-    def update_recommend_survey(cls, student_id, user_answer):
+    def update_recommend_survey(cls, username, user_answer):
         wks = spreadsheet.worksheet('recommend_survey')
+
+    @classmethod
+    def update_selected_spots(cls, username, selected_spots):
+        wks = spreadsheet.worksheet('selected_spots')
+        num = cls.check_exists(wks, username)
+        cell_list = wks.range("A{}:K{}".format(num, num))
+
+        values = [username]
+        values.extend(selected_spots)
+
+        for cell, v in zip(cell_list, values):
+            cell.value = v
+        wks.update_cells(cell_list)

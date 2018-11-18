@@ -156,7 +156,8 @@ def confirm_cart():
         flash('10件選択してください', 'danger')
         return redirect(url_for('list_cart'))
     session['confirm'] = True
-    spots = list(map(lambda spot_id: ChootripApi.get_spot(spot_id), session['cart']))
+    # spots = list(map(lambda spot_id: ChootripApi.get_spot(spot_id), session['cart']))
+    spots = ChootripApi.get_spots(session['cart'])
     spots = set_cart_added(spots)
     spots = set_one_image(spots)
     return render_template('confirm_cart.html', spots=spots)
@@ -177,7 +178,20 @@ def show_recommend():
 
     # GET: PREFERENCE
     normalized_user_vec = recommend_data['normalized_user_vec']
-    SpreadSheet.update_topic_result(session['username'], normalized_user_vec)
+    SpreadSheet.update_normalized_topic_result(session['username'], normalized_user_vec)
+    user_vec = recommend_data['user_vec']
+    SpreadSheet.update_topic_result(session['username'], user_vec)
+
+    selected_spots = ChootripApi.get_spots(session['cart'])
+    selected_spots_name = []
+    for selected_spot in selected_spots:
+        selected_spots_name.append(selected_spot['title'])
+    SpreadSheet.update_selected_spots(session['username'], selected_spots_name)
+
+    recommend_spots_name = []
+    for recommend_spot in recommend_spots:
+        recommend_spots_name.append(recommend_spot['title'])
+    SpreadSheet.update_recommend_result(session['username'], recommend_spots_name)
 
     return render_template(
         'recommends.html', recommend_spots=recommend_spots, topics=zip(topics_with_words, normalized_user_vec))

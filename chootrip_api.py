@@ -25,6 +25,7 @@ class ChootripApi:
 
     @classmethod
     def get_spots(cls, spot_ids):
+        spot_ids = list(map(lambda spot_id: str(spot_id), spot_ids))
         return cls.request_api("spots/?id__in={}".format(','.join(spot_ids)))
 
     @classmethod
