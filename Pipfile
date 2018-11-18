@@ -8,6 +8,8 @@ flask = "==1.0.2"
 requests = "*"
 gunicorn = "*"
 google-cloud-datastore = "*"
+gspread = "*"
+"oauth2client" = "*"
 
 [dev-packages]
 
