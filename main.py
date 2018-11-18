@@ -70,6 +70,22 @@ def delete_session():
     return redirect(url_for('login'))
 
 
+@app.route('/topic_survey', methods=['GET', 'POST'])
+def topic_survey():
+    if request.method == 'GET':
+        return render_template('topic_survey.html', topics=topics_with_words)
+    else:
+        if len(topics_with_words) != len(request.form):
+            flash('入力漏れがあったようです．', 'danger')
+            return redirect(url_for('topic_survey'))
+        user_answer = []
+        for i in range(len(topics)):
+            user_answer.append(request.form[str(i)])
+        SpreadSheet.update_topic_survey(session['username'], user_answer)
+        flash('登録完了しました．下の説明の指示に従ってください．', 'info')
+        return redirect(url_for('top'))
+
+
 @app.route('/')
 def top():
     if 'username' not in session:

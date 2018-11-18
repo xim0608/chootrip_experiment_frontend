@@ -24,6 +24,15 @@ class SpreadSheet():
     @classmethod
     def update_topic_survey(cls, username, user_answer):
         wks = spreadsheet.worksheet('topic_survey')
+        num = cls.check_exists(wks, username)
+        cell_list = wks.range("A{}:AY{}".format(num, num))
+
+        values = [username]
+        values.extend(user_answer)
+
+        for cell, v in zip(cell_list, values):
+            cell.value = v
+        wks.update_cells(cell_list)
 
     @classmethod
     def update_topic_result(cls, username, user_vector):
