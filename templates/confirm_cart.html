@@ -7,22 +7,26 @@
 
   <p>以下のスポットを送信し，レコメンドを表示します</p>
 
-
-  <div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">スポット名</th>
+        <th scope="col">リンク</th>
+      </tr>
+    </thead>
+    <tbody>
     {% for spot in spots %}
-      <div class="card flex-row flex-wrap spot-card">
-        <div class="card-header border-0">
-          <img src="{{ spot['image_url'] }}" alt="">
-        </div>
-        <div class="card-block px-2">
+      <tr>
+        <td>
           <h4 class="card-title">{{ spot.title }}</h4>
-          <p class="card-text">Description</p>
+        </td>
+        <td>
           <a href="{{ spot['url'] }}" target="_blank" class="btn btn-outline-success">TripAdvisorでスポット情報を確認する</a>
-        </div>
-        <div class="w-100"></div>
-      </div>
+        </td>
+      </tr>
     {% endfor %}
-  </div>
+    </tbody>
+  </table>
 
   {% if session['cart'] |count == 10 %}
     <div class="text-center">

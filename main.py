@@ -1,11 +1,21 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
 import os
 from chootrip_api import ChootripApi
+
 # from google.cloud import datastore
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 prefectures = ChootripApi.get_prefectures()
+topics = ChootripApi.get_topics()['topics']
+topics_with_words = []
+for i in range(len(topics)):
+    topic_term_top_5 = []
+    for topic_term in topics[str(i)][:5]:
+        word = topic_term[0]
+        _word_score = topic_term[1]
+        topic_term_top_5.append(word)
+    topics_with_words.append(','.join(topic_term_top_5))
 
 
 @app.context_processor
@@ -156,14 +166,55 @@ def show_recommend():
     if ('confirm' not in session) or len(session['cart']) != 10:
         flash('不正な入力です', 'danger')
         return redirect(url_for('top'))
-    # もうすでにこの学籍番号のデータが登録されている場合は，ここで弾く
+    # TODO: もうすでにこの学籍番号のデータが登録されている場合は，ここで弾く
     session.pop('confirm', None)
 
+    # GET: RECOMMEND_SPOTS
     # keys: ['similarities', 'user_vec']
     recommend_data = ChootripApi.get_recommend(session['cart'])
+    recommend_spots = extract_10_recommend_spots(similarities_dict=recommend_data['similarities'])
 
+    # GET: PREFERENCE
+    normalized_user_vec = recommend_data['normalized_user_vec']
+
+    return render_template(
+        'recommends.html', recommend_spots=recommend_spots, topics=zip(topics_with_words, normalized_user_vec))
+
+
+def extract_10_recommend_spots(similarities_dict):
+    similarities_sorted = sorted(similarities_dict.items(), key=lambda x: -x[1])
+    # chunk_size件ずつ条件にあったスポットを取り出す
+    chunk_size = 50
+    chunked_similarities = [similarities_sorted[n:n + chunk_size] for n in
+                            range(0, len(similarities_sorted), chunk_size)]
     recommend_spots = []
-    return render_template('recommends.html', recommend_spots=recommend_spots)
+    for similarities_by_chunk_size in chunked_similarities:
+        spot_ids = []
+        for spot_similarity_info in similarities_by_chunk_size:
+            spot_id = spot_similarity_info[0]
+            _similarity = spot_similarity_info[1]
+            spot_ids.append(spot_id)
+        spots = ChootripApi.get_spots(spot_ids)
+        recommend_spots.extend(spots)
+
+        # exclude selected spots
+        recommend_spots = list(filter(lambda s: s['id'] not in session['cart'], recommend_spots))
+
+        # extract by counts
+        recommend_spots = list(filter(lambda s: s['count'] >= 153, recommend_spots))
+
+        # set similarity
+        for spot in recommend_spots:
+            spot['similarity'] = similarities_dict[str(spot['id'])]
+
+        # sort
+        recommend_spots = list(sorted(recommend_spots, key=lambda s: -s['similarity']))
+
+        if len(recommend_spots) > 10:
+            break
+    return recommend_spots[:10]
+
+
 
 
 def set_cart_added(spots):

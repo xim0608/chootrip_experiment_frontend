@@ -24,12 +24,20 @@ class ChootripApi:
         return cls.request_api("spots/{}/".format(int(spot_id)))
 
     @classmethod
+    def get_spots(cls, spot_ids):
+        return cls.request_api("spots/?id__in={}".format(','.join(spot_ids)))
+
+    @classmethod
     def get_city(cls, city_id):
         return cls.request_api("cities/{}/".format(int(city_id)))
 
     @classmethod
     def get_spots_by_title_search(cls, title_keyword):
         return cls.request_api("spots/?title__icontains={}".format(title_keyword))
+
+    @classmethod
+    def get_topics(cls):
+        return cls.request_api("topics/")
 
     @classmethod
     def get_recommend(cls, spot_ids):

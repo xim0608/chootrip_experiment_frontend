@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-  <h1>レコメンド一覧</h1>
+  <h2>レコメンド一覧</h2>
 
   <div>
     {% for spot in recommend_spots %}
@@ -13,12 +13,36 @@
         </div>
         <div class="card-block px-2">
           <h4 class="card-title">{{ spot.title }}</h4>
-          <p class="card-text">Description</p>
+          <p class="card-text">類似度：{{ spot.similarity }}</p>
           <a href="{{ spot['url'] }}" target="_blank" class="btn btn-outline-success">TripAdvisorでスポット情報を確認する</a>
         </div>
         <div class="w-100"></div>
       </div>
     {% endfor %}
+  </div>
+
+  <h2>嗜好推定(これはdebug用)</h2>
+  <div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">トピック単語</th>
+          <th scope="col">嗜好推定</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for words, zscore in topics %}
+          <tr>
+            <td>{{ words }}</td>
+            {% if zscore > 0 %}
+              <td>○</td>
+            {% else %}
+              <td>×</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
 </div>
