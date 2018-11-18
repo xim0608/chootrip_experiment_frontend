@@ -56,5 +56,9 @@
     })
   });
 
+  $('#not-confirm-btn').on('click', function () {
+    alert('10件選択してください');
+  })
+
 
 })(jQuery);

@@ -29,6 +29,16 @@
       <p>検索キーワードを変えてもう一度検索してください．</p>
     {% endif %}
   </div>
+
+  {% if session['cart'] |count == 10 %}
+    <div class="text-center">
+      <a class="btn btn-success btn-lg" id="confirm-btn" role="button" href="{{ url_for('confirm_cart') }}">確認画面へ</a>
+    </div>
+  {% else %}
+    <div class="text-center">
+      <button class="btn btn-success btn-lg confirm-btn" id='not-confirm-btn' role="button">レコメンドを表示</button>
+    </div>
+  {% endif %}
 </div>
 
 {% endblock %}

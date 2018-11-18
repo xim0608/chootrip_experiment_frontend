@@ -48,12 +48,24 @@
   </div>
 </nav>
 
-
 <body>
 
-<div class="content" style="margin-top: 50px;">
-  {% block content %}
-  {% endblock %}
+<div id="content">
+  <div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class='flashes'>
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  </div>
+  <div id="main">
+    {% block content %}
+    {% endblock %}
+  </div>
 </div>
 
 <script

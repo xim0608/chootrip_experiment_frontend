@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
 import os
 from chootrip_api import ChootripApi
 # from google.cloud import datastore
@@ -55,6 +55,7 @@ def new_session():
 def delete_session():
     session.pop('username', None)
     session.pop('cart', None)
+    session.pop('confirm', None)
     return redirect(url_for('login'))
 
 
@@ -136,6 +137,29 @@ def list_cart():
     spots = set_cart_added(spots)
     spots = set_one_image(spots)
     return render_template('list_cart.html', spots=spots)
+
+
+@app.route('/cart/confirm')
+def confirm_cart():
+    if len(session['cart']) != 10:
+        flash('10件選択してください', 'danger')
+        return redirect(url_for('list_cart'))
+    session['confirm'] = True
+    spots = list(map(lambda spot_id: ChootripApi.get_spot(spot_id), session['cart']))
+    spots = set_cart_added(spots)
+    spots = set_one_image(spots)
+    return render_template('confirm_cart.html', spots=spots)
+
+
+@app.route('/recommend')
+def show_recommend():
+    if ('confirm' not in session) or len(session['cart']) != 10:
+        flash('不正な入力です', 'danger')
+        return redirect(url_for('top'))
+    # もうすでにこの学籍番号のデータが登録されている場合は，ここで弾く
+    session.pop('confirm', None)
+    recommend_spots = []
+    return render_template('recommends.html', recommend_spots=recommend_spots)
 
 
 def set_cart_added(spots):
