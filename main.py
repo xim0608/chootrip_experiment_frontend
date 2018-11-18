@@ -45,6 +45,7 @@ def login():
 def new_session():
     if request.method == 'POST':
         session['username'] = request.form['username']
+        session['cart'] = []
         return redirect(url_for('top'))
     else:
         return redirect(url_for('login'))
