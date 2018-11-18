@@ -21,11 +21,7 @@ class ChootripApi:
 
     @classmethod
     def get_spot(cls, spot_id):
-        spot = cls.request_api("spots/{}/".format(int(spot_id)))
-        if 'spotimage_set' in spot:
-            if len(spot['spotimage_set']) > 0:
-                spot['image_url'] = spot['spotimage_set'][0]["url"]
-        return spot
+        return cls.request_api("spots/{}/".format(int(spot_id)))
 
     @classmethod
     def get_city(cls, city_id):
@@ -33,12 +29,7 @@ class ChootripApi:
 
     @classmethod
     def get_spots_by_title_search(cls, title_keyword):
-        spots = cls.request_api("spots/?title__icontains={}".format(title_keyword))
-        for spot in spots:
-            spot['image_url'] = ''
-            if len(spot['spotimage_set']) > 0:
-                spot['image_url'] = spot['spotimage_set'][0]["url"]
-        return spots
+        return cls.request_api("spots/?title__icontains={}".format(title_keyword))
 
     @classmethod
     def request_api(cls, path):

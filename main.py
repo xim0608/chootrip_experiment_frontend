@@ -77,9 +77,8 @@ def select_city(prefecture_id=None):
 def list_city(city_id=None):
     spots = ChootripApi.get_city_spots(city_id=int(city_id))
     city = ChootripApi.get_city(city_id)
-    for spot in spots:
-        if spot['id'] in session['cart']:
-            spot['added'] = True
+    spots = set_cart_added(spots)
+    spots = set_one_image(spots)
 
     return render_template('list_spots.html', segment_name=city['name'], spots=spots)
 
@@ -92,9 +91,8 @@ def search_result():
         spots = ChootripApi.get_spots_by_title_search(q)
     else:
         spots = []
-    for spot in spots:
-        if spot['id'] in session['cart']:
-            spot['added'] = True
+    spots = set_cart_added(spots)
+    spots = set_one_image(spots)
     return render_template('search_result.html', search_word=q, spots=spots)
 
 
@@ -135,9 +133,25 @@ def list_cart_api():
 @app.route('/cart')
 def list_cart():
     spots = list(map(lambda spot_id: ChootripApi.get_spot(spot_id), session['cart']))
-    for spot in spots:
-        spot['added'] = True
+    spots = set_cart_added(spots)
+    spots = set_one_image(spots)
     return render_template('list_cart.html', spots=spots)
+
+
+def set_cart_added(spots):
+    for spot in spots:
+        if spot['id'] in session['cart']:
+            spot['added'] = True
+    return spots
+
+
+def set_one_image(spots):
+    for spot in spots:
+        if len(spot['spotimage_set']) > 0:
+            spot['image_url'] = spot['spotimage_set'][0]["url"]
+        else:
+            spot['image_url'] = url_for('static', filename='no_image.png')
+    return spots
 
 
 if __name__ == '__main__':
