@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
 import os
 from chootrip_api import ChootripApi
+from experiment_db import SpreadSheet
 
 # from google.cloud import datastore
 
@@ -176,6 +177,7 @@ def show_recommend():
 
     # GET: PREFERENCE
     normalized_user_vec = recommend_data['normalized_user_vec']
+    SpreadSheet.update_topic_result(session['username'], normalized_user_vec)
 
     return render_template(
         'recommends.html', recommend_spots=recommend_spots, topics=zip(topics_with_words, normalized_user_vec))
@@ -213,8 +215,6 @@ def extract_10_recommend_spots(similarities_dict):
         if len(recommend_spots) > 10:
             break
     return recommend_spots[:10]
-
-
 
 
 def set_cart_added(spots):
