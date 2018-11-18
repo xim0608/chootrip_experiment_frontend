@@ -158,6 +158,10 @@ def show_recommend():
         return redirect(url_for('top'))
     # もうすでにこの学籍番号のデータが登録されている場合は，ここで弾く
     session.pop('confirm', None)
+
+    # keys: ['similarities', 'user_vec']
+    recommend_data = ChootripApi.get_recommend(session['cart'])
+
     recommend_spots = []
     return render_template('recommends.html', recommend_spots=recommend_spots)
 

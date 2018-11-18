@@ -32,6 +32,21 @@ class ChootripApi:
         return cls.request_api("spots/?title__icontains={}".format(title_keyword))
 
     @classmethod
+    def get_recommend(cls, spot_ids):
+        import json
+        print('get recommend')
+        try:
+            headers = {"content-type": "application/json"}
+            data = {'spot_ids': spot_ids}
+            result = requests.get(cls.BASE_API_URL + 'recommend/', data=json.dumps(data), headers=headers)
+            data = result.json()
+            return data
+        except RequestException:
+            import traceback
+            traceback.print_exc()
+            return False
+
+    @classmethod
     def request_api(cls, path):
         try:
             headers = {"content-type": "application/json"}
