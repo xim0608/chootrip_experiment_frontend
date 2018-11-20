@@ -229,7 +229,7 @@ def recommend_survey():
             user_answer_interest = []
             for num in range(0, 10):
                 user_answer_new.append(int(request.form["n{}".format(str(num))]))
-                user_answer_interest.append(int(request.form["i{}".format(str(num))])
+                user_answer_interest.append(int(request.form["i{}".format(str(num))]))
             SpreadSheet.update_recommend_survey_of_new(session['username'], user_answer_new)
             SpreadSheet.update_recommend_survey_of_interest(session['username'], user_answer_interest)
             flash('これで全ての質問が終了しました．ご協力ありがとうございました．')
