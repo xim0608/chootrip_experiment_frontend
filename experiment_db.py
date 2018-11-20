@@ -74,8 +74,30 @@ class SpreadSheet():
         wks.update_cells(cell_list)
 
     @classmethod
-    def update_recommend_survey(cls, username, user_answer):
-        wks = spreadsheet.worksheet('recommend_survey')
+    def update_recommend_survey_of_new(cls, username, user_answer):
+        wks = spreadsheet.worksheet('recommend_survey_of_new')
+        num = cls.check_exists(wks, username)
+        cell_list = wks.range("A{}:AY{}".format(num, num))
+
+        values = [username]
+        values.extend(user_answer)
+
+        for cell, v in zip(cell_list, values):
+            cell.value = v
+        wks.update_cells(cell_list)
+
+    @classmethod
+    def update_recommend_survey_of_interest(cls, username, user_answer):
+        wks = spreadsheet.worksheet('recommend_survey_of_interest')
+        num = cls.check_exists(wks, username)
+        cell_list = wks.range("A{}:AY{}".format(num, num))
+
+        values = [username]
+        values.extend(user_answer)
+
+        for cell, v in zip(cell_list, values):
+            cell.value = v
+        wks.update_cells(cell_list)
 
     @classmethod
     def update_selected_spots(cls, username, selected_spots):

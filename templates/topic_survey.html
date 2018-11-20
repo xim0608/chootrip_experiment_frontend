@@ -24,8 +24,7 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">トピック単語</th>
-          <th scope="col">興味がある</th>
-          <th scope="col">興味がない</th>
+          <th scope="col" colspan="2">興味</th>
         </tr>
       </thead>
       <tbody>
@@ -34,10 +33,10 @@
             <td>{{ loop.index0 }}</td>
             <td>{{ words }}</td>
             <td>
-              興味がある：<input type="radio" name="{{ loop.index0 }}" value="1">
+              ある：<input type="radio" name="{{ loop.index0 }}" value="1">
             </td>
             <td>
-              興味がない：<input type="radio" name="{{ loop.index0 }}" value="0">
+              ない：<input type="radio" name="{{ loop.index0 }}" value="0">
             </td>
           </tr>
         {% endfor %}

@@ -57,7 +57,8 @@ def new_session():
     if request.method == 'POST':
         session['username'] = request.form['username']
         session['cart'] = []
-        return redirect(url_for('top'))
+        session['topic_answered'] = False
+        return redirect(url_for('topic_survey'))
     else:
         return redirect(url_for('login'))
 
@@ -67,29 +68,36 @@ def delete_session():
     session.pop('username', None)
     session.pop('cart', None)
     session.pop('confirm', None)
+    session.pop('topic_answered', None)
     return redirect(url_for('login'))
 
 
 @app.route('/topic_survey', methods=['GET', 'POST'])
 def topic_survey():
-    if request.method == 'GET':
-        return render_template('topic_survey.html', topics=topics_with_words)
+    if session['username'] or not session['topic_answered']:
+        if request.method == 'GET':
+            return render_template('topic_survey.html', topics=topics_with_words)
+        else:
+            if len(topics_with_words) != len(request.form):
+                flash('入力漏れがあったようです．', 'danger')
+                return redirect(url_for('topic_survey'))
+            user_answer = []
+            for i in range(len(topics)):
+                user_answer.append(int(request.form[str(i)]))
+            SpreadSheet.update_topic_survey(session['username'], user_answer)
+            flash('登録完了しました．下の説明の指示に従ってください．', 'info')
+            session['topic_answered'] = True
+            return redirect(url_for('top'))
     else:
-        if len(topics_with_words) != len(request.form):
-            flash('入力漏れがあったようです．', 'danger')
-            return redirect(url_for('topic_survey'))
-        user_answer = []
-        for i in range(len(topics)):
-            user_answer.append(request.form[str(i)])
-        SpreadSheet.update_topic_survey(session['username'], user_answer)
-        flash('登録完了しました．下の説明の指示に従ってください．', 'info')
-        return redirect(url_for('top'))
+        return redirect(url_for('login'))
 
 
 @app.route('/')
 def top():
     if 'username' not in session:
         return redirect(url_for('login'))
+    if not session.get('topic_answered'):
+        return redirect(url_for('topic_survey'))
     return render_template('top.html', prefectures=prefectures)
 
 
@@ -181,7 +189,7 @@ def confirm_cart():
 
 @app.route('/recommend')
 def show_recommend():
-    if ('confirm' not in session) or len(session['cart']) != 10:
+    if len(session['cart']) != 10:
         flash('不正な入力です', 'danger')
         return redirect(url_for('top'))
     # TODO: もうすでにこの学籍番号のデータが登録されている場合は，ここで弾く
@@ -211,6 +219,24 @@ def show_recommend():
 
     return render_template(
         'recommends.html', recommend_spots=recommend_spots, topics=zip(topics_with_words, normalized_user_vec))
+
+
+@app.route('/recommend_survey', methods=['POST'])
+def recommend_survey():
+    if request.method == 'POST':
+        if len(request.form) == (10 * 2):
+            user_answer_new = []
+            user_answer_interest = []
+            for num in range(0, 10):
+                user_answer_new.append(int(request.form["n{}".format(str(num))]))
+                user_answer_interest.append(int(request.form["i{}".format(str(num))])
+            SpreadSheet.update_recommend_survey_of_new(session['username'], user_answer_new)
+            SpreadSheet.update_recommend_survey_of_interest(session['username'], user_answer_interest)
+            flash('これで全ての質問が終了しました．ご協力ありがとうございました．')
+            return redirect(url_for('login'))
+        else:
+            flash('全ての欄に回答してください', 'danger')
+            return redirect(url_for('show_recommend'))
 
 
 def extract_10_recommend_spots(similarities_dict):

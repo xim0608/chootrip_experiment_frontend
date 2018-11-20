@@ -11,6 +11,16 @@
 
 
 <div class="content">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class='flashes'>
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
   <div class="container">
     <form action="./session" method="post" class="form-signin">
       <h1 class="h3 mb-3 font-weight-normal">
