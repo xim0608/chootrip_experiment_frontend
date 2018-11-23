@@ -84,7 +84,8 @@ def topic_survey():
             user_answer = []
             for i in range(len(topics)):
                 user_answer.append(int(request.form[str(i)]))
-            SpreadSheet.update_topic_survey(session['username'], user_answer)
+            s = SpreadSheet()
+            s.update_topic_survey(session['username'], user_answer)
             flash('登録完了しました．下の説明の指示に従ってください．', 'info')
             session['topic_answered'] = True
             return redirect(url_for('top'))
@@ -201,21 +202,22 @@ def show_recommend():
     recommend_spots = extract_10_recommend_spots(similarities_dict=recommend_data['similarities'])
 
     # GET: PREFERENCE
+    s = SpreadSheet()
     normalized_user_vec = recommend_data['normalized_user_vec']
-    SpreadSheet.update_normalized_topic_result(session['username'], normalized_user_vec)
+    s.update_normalized_topic_result(session['username'], normalized_user_vec)
     user_vec = recommend_data['user_vec']
-    SpreadSheet.update_topic_result(session['username'], user_vec)
+    s.update_topic_result(session['username'], user_vec)
 
     selected_spots = ChootripApi.get_spots(session['cart'])
     selected_spots_name = []
     for selected_spot in selected_spots:
         selected_spots_name.append(selected_spot['title'])
-    SpreadSheet.update_selected_spots(session['username'], selected_spots_name)
+    s.update_selected_spots(session['username'], selected_spots_name)
 
     recommend_spots_name = []
     for recommend_spot in recommend_spots:
         recommend_spots_name.append(recommend_spot['title'])
-    SpreadSheet.update_recommend_result(session['username'], recommend_spots_name)
+    s.update_recommend_result(session['username'], recommend_spots_name)
 
     return render_template(
         'recommends.html', recommend_spots=recommend_spots, topics=zip(topics_with_words, normalized_user_vec))
@@ -230,8 +232,9 @@ def recommend_survey():
             for num in range(0, 10):
                 user_answer_new.append(int(request.form["n{}".format(str(num))]))
                 user_answer_interest.append(int(request.form["i{}".format(str(num))]))
-            SpreadSheet.update_recommend_survey_of_new(session['username'], user_answer_new)
-            SpreadSheet.update_recommend_survey_of_interest(session['username'], user_answer_interest)
+            s = SpreadSheet()
+            s.update_recommend_survey_of_new(session['username'], user_answer_new)
+            s.update_recommend_survey_of_interest(session['username'], user_answer_interest)
             flash('これで全ての質問が終了しました．ご協力ありがとうございました．')
             return redirect(url_for('login'))
         else:
