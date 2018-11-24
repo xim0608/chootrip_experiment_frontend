@@ -292,5 +292,19 @@ def set_one_image(spots):
     return spots
 
 
+@app.route('/reset_topic')
+def reset_topic():
+    if session['username'] == os.environ.get('ADMIN_USERNAME'):
+        topics = ChootripApi.get_topics()['topics']
+        topics_with_words = []
+        for i in range(len(topics)):
+            topic_term_top_5 = []
+            for topic_term in topics[str(i)][:5]:
+                word = topic_term[0]
+                _word_score = topic_term[1]
+                topic_term_top_5.append(word)
+            topics_with_words.append(','.join(topic_term_top_5))
+
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
