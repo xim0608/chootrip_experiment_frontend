@@ -304,6 +304,10 @@ def reset_topic():
                 _word_score = topic_term[1]
                 topic_term_top_5.append(word)
             topics_with_words.append(','.join(topic_term_top_5))
+        return redirect(url_for('top'))
+    else:
+        flash('Forbidden', 'danger')
+        return redirect(url_for('top'))
 
 
 if __name__ == '__main__':
