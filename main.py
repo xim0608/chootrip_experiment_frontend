@@ -8,15 +8,7 @@ from experiment_db import SpreadSheet
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 prefectures = ChootripApi.get_prefectures()
-topics = ChootripApi.get_topics()['topics']
-topics_with_words = []
-for i in range(len(topics)):
-    topic_term_top_5 = []
-    for topic_term in topics[str(i)][:5]:
-        word = topic_term[0]
-        _word_score = topic_term[1]
-        topic_term_top_5.append(word)
-    topics_with_words.append(','.join(topic_term_top_5))
+
 
 
 @app.context_processor
@@ -75,6 +67,8 @@ def delete_session():
 @app.route('/topic_survey', methods=['GET', 'POST'])
 def topic_survey():
     if session['username'] or not session['topic_answered']:
+        topics = get_topics()
+        topics_with_words = get_topics_with_words()
         if request.method == 'GET':
             return render_template('topic_survey.html', topics=topics_with_words)
         else:
@@ -201,6 +195,8 @@ def show_recommend():
     recommend_data = ChootripApi.get_recommend(session['cart'])
     recommend_spots = extract_10_recommend_spots(similarities_dict=recommend_data['similarities'])
 
+    topics_with_words = get_topics_with_words()
+
     # GET: PREFERENCE
     s = SpreadSheet()
     normalized_user_vec = recommend_data['normalized_user_vec']
@@ -295,19 +291,28 @@ def set_one_image(spots):
 @app.route('/reset_topic')
 def reset_topic():
     if session['username'] == os.environ.get('ADMIN_USERNAME'):
-        topics = ChootripApi.get_topics()['topics']
-        topics_with_words = []
-        for i in range(len(topics)):
-            topic_term_top_5 = []
-            for topic_term in topics[str(i)][:5]:
-                word = topic_term[0]
-                _word_score = topic_term[1]
-                topic_term_top_5.append(word)
-            topics_with_words.append(','.join(topic_term_top_5))
+
         return redirect(url_for('top'))
     else:
         flash('Forbidden', 'danger')
         return redirect(url_for('top'))
+
+
+def get_topics():
+    topics = ChootripApi.get_topics()['topics']
+    return topics
+
+
+def get_topics_with_words():
+    topics_with_words = []
+    for i in range(len(topics)):
+        topic_term_top_5 = []
+        for topic_term in topics[str(i)][:5]:
+            word = topic_term[0]
+            _word_score = topic_term[1]
+            topic_term_top_5.append(word)
+        topics_with_words.append(','.join(topic_term_top_5))
+    return topics_with_words
 
 
 if __name__ == '__main__':
