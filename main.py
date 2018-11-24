@@ -10,7 +10,6 @@ app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 prefectures = ChootripApi.get_prefectures()
 
 
-
 @app.context_processor
 def inject_pref():
     return dict(prefectures=prefectures)
@@ -304,6 +303,7 @@ def get_topics():
 
 
 def get_topics_with_words():
+    topics = get_topics()
     topics_with_words = []
     for i in range(len(topics)):
         topic_term_top_5 = []
