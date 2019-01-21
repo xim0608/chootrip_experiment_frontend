@@ -14,7 +14,6 @@
           </div>
           <div class="card-block px-2">
             <h4 class="card-title">{{ spot.title }}</h4>
-            <p class="card-text">Description</p>
             {% if spot['added'] %}
               <button type="button" class="btn btn-primary toggle-cart" data-id="{{ spot['id'] }}">追加済み</button>
             {% else %}
